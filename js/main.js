@@ -1,4 +1,4 @@
-/* ========================================
+﻿/* ========================================
    MAIN APPLICATION
    Coordonne tous les modules
    ======================================== */
@@ -53,8 +53,8 @@ window.addEventListener('load', () => {
     /* Initialiser les modules */
     BuildingsManager.init();
     ExportManager.init();
-    UIManager.init();
-    AdvancedUIManager.init();
+    // UIManager.init(); // Commenté car pas de méthode init()
+    Advanced// UIManager.init(); // Commenté car pas de méthode init()
     
     /* Charger les sauvegardes */
     const hasSave = GameState.load();
@@ -125,6 +125,7 @@ window.addEventListener('error', (e) => {
     console.error('Erreur detectee:', e.error);
 });
 
-// Ajout du march� dynamique
+// Ajout du marché dynamique
 MarketManager.init();
+
 
