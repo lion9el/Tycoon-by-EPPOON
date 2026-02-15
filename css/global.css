@@ -1,0 +1,49 @@
+/* ========================================
+   VARIABLES & STYLES GLOBAUX
+   ======================================== */
+
+:root {
+    --bg: #000000;
+    --app-bg: #080808;
+    --accent: #00ff95;
+    --error: #ff4b4b;
+    --border: rgba(255, 255, 255, 0.1);
+    
+    /* Couleurs Banques */
+    --uba: #d4141c;
+    --ecobank: #00a4e4;
+    --boa: #f39200;
+    --nsia: #00a651;
+    --bg-select: #1a1a1a;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body, html {
+    margin: 0; 
+    padding: 0;
+    background-color: var(--bg);
+    height: 100vh; 
+    width: 100vw;
+    overflow: hidden;
+    font-family: 'Outfit', sans-serif;
+    color: white;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+
+/* Responsive */
+@media (max-width: 350px) {
+    .balance-val {
+        font-size: 1.6rem;
+    }
+    .tap-circle {
+        width: 140px;
+        height: 140px;
+        font-size: 3.5rem;
+    }
+}
