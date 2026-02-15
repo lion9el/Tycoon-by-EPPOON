@@ -5,18 +5,18 @@
 
 /* Fonction appelee au clic sur le bouton Demarrer */
 function startGame() {
-    FormHandler.submit();
+    if (typeof FormHandler !== 'undefined') FormHandler.submit();
 }
 
 /* Fonction appelee au clic sur le bouton Upgrade */
 function applyUpgrade() {
-    LevelManager.upgrade();
+    if (typeof LevelManager !== 'undefined') LevelManager.upgrade();
 }
 
 /* Fonction pour reinitialiser la progression */
 function resetProgress() {
     if (confirm('Voulez-vous vraiment reinitialiser votre progression ?')) {
-        if (GameState.reset()) {
+        if (typeof GameState !== 'undefined' && GameState.reset()) {
             location.reload();
         }
     }
@@ -30,13 +30,13 @@ function showGameIfSaved() {
     if (name && comp) {
         const game = document.getElementById('main-game');
         
-        UIManager.updateUserInfo();
+        if (typeof UIManager !== 'undefined') UIManager.updateUserInfo();
         
         if (game) {
             game.style.display = 'flex';
             setTimeout(() => {
                 game.style.opacity = '1';
-                UIManager.updateAll();
+                if (typeof UIManager !== 'undefined') UIManager.updateAll();
             }, 100);
         }
         return true;
@@ -47,99 +47,87 @@ function showGameIfSaved() {
 /* Initialisation au chargement de la page */
 window.addEventListener('load', () => {
     
-    /* Initialiser ErrorHandler */
-    ErrorHandler.init();
+    /* 1. Initialiser ErrorHandler en premier */
+    if (typeof ErrorHandler !== 'undefined') {
+        ErrorHandler.init();
+    }
     
-    /* Initialiser les modules */
-    BuildingsManager.init();
-    ExportManager.init();
-    // // UIManager.init(); // Pas de méthode init() // Commenté car pas de méthode init()
-    Advanced// // UIManager.init(); // Pas de méthode init() // Commenté car pas de méthode init()
+    /* 2. Initialiser les modules moteurs */
+    if (typeof BuildingsManager !== 'undefined') BuildingsManager.init();
+    if (typeof ExportManager !== 'undefined') ExportManager.init();
+    if (typeof MarketManager !== 'undefined') MarketManager.init(); // Déplacé ici pour sécurité
     
-    /* Charger les sauvegardes */
-    const hasSave = GameState.load();
-    DerivativesManager.load();
-    BuildingsManager.load();
-    ExportManager.load();
+    /* 3. Initialiser l'interface avancée (CORRECTIF de la ligne brisée) */
+    if (typeof AdvancedUIManager !== 'undefined' && AdvancedUIManager.initTabs) {
+        AdvancedUIManager.initTabs();
+    }
     
-    /* Demarrer le splash screen */
-    SplashModule.start(() => {
-        /* Une fois le splash termine */
-        if (hasSave && showGameIfSaved()) {
-            /* Le jeu s'affiche directement */
-        } else {
-            /* Afficher le formulaire */
-            FormHandler.show();
-        }
-    });
+    /* 4. Charger les sauvegardes */
+    const hasSave = (typeof GameState !== 'undefined') ? GameState.load() : false;
+    if (typeof DerivativesManager !== 'undefined') DerivativesManager.load();
+    if (typeof BuildingsManager !== 'undefined') BuildingsManager.load();
+    if (typeof ExportManager !== 'undefined') ExportManager.load();
+    
+    /* 5. Demarrer le splash screen */
+    if (typeof SplashModule !== 'undefined') {
+        SplashModule.start(() => {
+            if (hasSave && showGameIfSaved()) {
+                console.log("🎮 Session restaurée.");
+            } else {
+                if (typeof FormHandler !== 'undefined') FormHandler.show();
+            }
+        });
+    }
 
-    /* Configurer les evenements de clic */
+    /* 6. Configurer la zone de clic (Coton) */
     const clickArea = document.getElementById('tap-btn');
-    if (clickArea) {
-        /* Empecher le comportement par defaut */
+    if (clickArea && typeof ClickHandler !== 'undefined') {
         clickArea.addEventListener('touchstart', (e) => {
             e.preventDefault();
         }, { passive: false });
 
-        /* Gerer les clics */
         clickArea.addEventListener('pointerdown', (e) => {
             e.preventDefault();
             ClickHandler.handleClick(e);
         });
     }
 
-    /* Sauvegarde periodique (toutes les 5 secondes) */
+    /* 7. Boucles automatiques */
+    // Sauvegarde (5s)
     setInterval(() => {
-        const money = GameState.get('money');
-        const lvl = GameState.get('lvl');
-        
-        if (money > 0 || lvl > 1) {
-            GameState.save();
-            DerivativesManager.save();
-            BuildingsManager.save();
-            ExportManager.save();
+        if (typeof GameState !== 'undefined') {
+            const money = GameState.get('money');
+            if (money > 0) {
+                GameState.save();
+                if (typeof DerivativesManager !== 'undefined') DerivativesManager.save();
+                if (typeof BuildingsManager !== 'undefined') BuildingsManager.save();
+                if (typeof ExportManager !== 'undefined') ExportManager.save();
+            }
         }
     }, 5000);
     
-    /* Mettre a jour l'UI periodiquement */
+    // Mise à jour UI (2s)
     setInterval(() => {
-        AdvancedUIManager.updateAll();
+        if (typeof AdvancedUIManager !== 'undefined') AdvancedUIManager.updateAll();
     }, 2000);
     
-    /* Maintenance des batiments */
+    // Maintenance (1min)
     setInterval(() => {
-        BuildingsManager.payMaintenance();
+        if (typeof BuildingsManager !== 'undefined') BuildingsManager.payMaintenance();
     }, 60000);
 });
 
 /* Sauvegarder avant de quitter */
 window.addEventListener('beforeunload', () => {
-    GameState.save();
-    DerivativesManager.save();
-    BuildingsManager.save();
-    ExportManager.save();
+    if (typeof GameState !== 'undefined') {
+        GameState.save();
+        DerivativesManager.save();
+        BuildingsManager.save();
+        ExportManager.save();
+    }
 });
 
 /* Gestion des erreurs globales */
 window.addEventListener('error', (e) => {
-    console.error('Erreur detectee:', e.error);
+    if (e.error) console.error('Erreur détectée:', e.error);
 });
-
-
-// Debug chargement modules
-if (typeof AdvancedUIManager === 'undefined') console.error('AdvancedUIManager non chargé');
-if (typeof UIManager === 'undefined') console.error('UIManager non chargé');
-if (typeof MarketManager === 'undefined') console.error('MarketManager non chargé');
-// Ajout du marché dynamique
-MarketManager.init();
-
-
-
-
-
-
-
-
-
-
-
