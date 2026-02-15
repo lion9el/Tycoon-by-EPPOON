@@ -124,3 +124,7 @@ window.addEventListener('beforeunload', () => {
 window.addEventListener('error', (e) => {
     console.error('Erreur detectee:', e.error);
 });
+
+// Ajout du marché dynamique
+MarketManager.init();
+
