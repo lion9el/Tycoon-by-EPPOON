@@ -1,42 +1,56 @@
 ﻿/* ========================================
-   MAIN APPLICATION
-   Coordonne tous les modules
+   MODULE: ERROR HANDLER (Le Bouclier)
+   Version: 1.1 - Stable
    ======================================== */
 
-/* Fonction appelee au clic sur le bouton Demarrer */
-function startGame() {
-    FormHandler.submit();
-}
-
-/* Fonction appelee au clic sur le bouton Upgrade */
-function applyUpgrade() {
-    LevelManager.upgrade();
-}
-
-/* Fonction pour reinitialiser la progression */
-function resetProgress() {
-    if (confirm('Voulez-vous vraiment reinitialiser votre progression ?')) {
-        if (GameState.reset()) {
-            location.reload();
+const ErrorHandler = (() => {
+    return {
+        init: () => {
+            console.log("🛡️ Système de protection activé.");
+            const display = document.getElementById('error-display');
+            if (display) display.style.display = 'none';
+        },
+        // Ajout de la fonction manquante demandée par export-manager.js
+        handleInfo: (msg) => {
+            console.info("ℹ️ INFO:", msg);
+        },
+        handleError: (msg, error) => {
+            console.error("❌ ERREUR:", msg, error);
+            const display = document.getElementById('error-display');
+            if (display) {
+                display.textContent = "Erreur: " + msg;
+                display.style.display = 'block';
+            }
+        },
+        handleWarning: (msg, error) => {
+            console.warn("⚠️ ALERTE:", msg, error);
         }
-    }
+    };
+})();
+
+/* ========================================
+   LOGIQUE DE LANCEMENT (MAIN)
+   ======================================== */
+
+function startGame() {
+    if (typeof FormHandler !== 'undefined') FormHandler.submit();
 }
 
-/* Afficher le jeu directement si sauvegarde existe */
+function applyUpgrade() {
+    if (typeof LevelManager !== 'undefined') LevelManager.upgrade();
+}
+
 function showGameIfSaved() {
     const name = GameState.get('name');
     const comp = GameState.get('comp');
-    
     if (name && comp) {
         const game = document.getElementById('main-game');
-        
-        UIManager.updateUserInfo();
-        
+        if (typeof UIManager !== 'undefined') UIManager.updateUserInfo();
         if (game) {
             game.style.display = 'flex';
             setTimeout(() => {
                 game.style.opacity = '1';
-                UIManager.updateAll();
+                if (typeof UIManager !== 'undefined') UIManager.updateAll();
             }, 100);
         }
         return true;
@@ -44,103 +58,31 @@ function showGameIfSaved() {
     return false;
 }
 
-/* Initialisation au chargement de la page */
 window.addEventListener('load', () => {
-    
-    /* Initialiser ErrorHandler */
     ErrorHandler.init();
     
-    /* Initialiser les modules */
-    BuildingsManager.init();
-    ExportManager.init();
-    // // UIManager.init(); // Pas de méthode init() // Commenté car pas de méthode init()
-    Advanced// // UIManager.init(); // Pas de méthode init() // Commenté car pas de méthode init()
+   /* Initialiser les modules */
+    if (typeof BuildingsManager !== 'undefined') BuildingsManager.init();
+    if (typeof ExportManager !== 'undefined') ExportManager.init();
     
-    /* Charger les sauvegardes */
-    const hasSave = GameState.load();
-    DerivativesManager.load();
-    BuildingsManager.load();
-    ExportManager.load();
-    
-    /* Demarrer le splash screen */
-    SplashModule.start(() => {
-        /* Une fois le splash termine */
-        if (hasSave && showGameIfSaved()) {
-            /* Le jeu s'affiche directement */
-        } else {
-            /* Afficher le formulaire */
-            FormHandler.show();
-        }
-    });
+    // Correction ici : On appelle la bonne fonction de l'AdvancedUIManager
+    if (typeof AdvancedUIManager !== 'undefined' && AdvancedUIManager.initTabs) {
+        AdvancedUIManager.initTabs();
+    }
 
-    /* Configurer les evenements de clic */
+    // Gestion du clic principal
     const clickArea = document.getElementById('tap-btn');
-    if (clickArea) {
-        /* Empecher le comportement par defaut */
-        clickArea.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-        }, { passive: false });
-
-        /* Gerer les clics */
+    if (clickArea && typeof ClickHandler !== 'undefined') {
         clickArea.addEventListener('pointerdown', (e) => {
             e.preventDefault();
             ClickHandler.handleClick(e);
         });
     }
-
-    /* Sauvegarde periodique (toutes les 5 secondes) */
-    setInterval(() => {
-        const money = GameState.get('money');
-        const lvl = GameState.get('lvl');
-        
-        if (money > 0 || lvl > 1) {
-            GameState.save();
-            DerivativesManager.save();
-            BuildingsManager.save();
-            ExportManager.save();
-        }
-    }, 5000);
-    
-    /* Mettre a jour l'UI periodiquement */
-    setInterval(() => {
-        AdvancedUIManager.updateAll();
-    }, 2000);
-    
-    /* Maintenance des batiments */
-    setInterval(() => {
-        BuildingsManager.payMaintenance();
-    }, 60000);
 });
 
-/* Sauvegarder avant de quitter */
-window.addEventListener('beforeunload', () => {
-    GameState.save();
-    DerivativesManager.save();
-    BuildingsManager.save();
-    ExportManager.save();
-});
-
-/* Gestion des erreurs globales */
+// Écouteur global d'erreurs unique
 window.addEventListener('error', (e) => {
-    console.error('Erreur detectee:', e.error);
+    if (e.error !== null) {
+        console.error('Erreur système:', e.error);
+    }
 });
-
-
-// Debug chargement modules
-if (typeof AdvancedUIManager === 'undefined') console.error('AdvancedUIManager non chargé');
-if (typeof UIManager === 'undefined') console.error('UIManager non chargé');
-if (typeof MarketManager === 'undefined') console.error('MarketManager non chargé');
-// Ajout du marché dynamique
-MarketManager.init();
-
-
-
-
-
-
-
-
-
-
-
-
