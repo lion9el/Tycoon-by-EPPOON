@@ -53,8 +53,8 @@ window.addEventListener('load', () => {
     /* Initialiser les modules */
     BuildingsManager.init();
     ExportManager.init();
-    // UIManager.init(); // Commenté car pas de méthode init()
-    Advanced// UIManager.init(); // Commenté car pas de méthode init()
+    // // UIManager.init(); // Pas de méthode init() // Commenté car pas de méthode init()
+    Advanced// // UIManager.init(); // Pas de méthode init() // Commenté car pas de méthode init()
     
     /* Charger les sauvegardes */
     const hasSave = GameState.load();
@@ -125,8 +125,16 @@ window.addEventListener('error', (e) => {
     console.error('Erreur detectee:', e.error);
 });
 
+
+// Debug chargement modules
+if (typeof AdvancedUIManager === 'undefined') console.error('AdvancedUIManager non chargé');
+if (typeof UIManager === 'undefined') console.error('UIManager non chargé');
+if (typeof MarketManager === 'undefined') console.error('MarketManager non chargé');
 // Ajout du marché dynamique
 MarketManager.init();
+
+
+
 
 
 
