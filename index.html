@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="Tycoon - Benin Edition - Jeu professionnel de clicker">
+    <meta name="author" content="Tycoon Team">
+    <meta name="version" content="1.0.0">
+    <title>Tycoon - Benin Edition</title>
+    
+    <!-- Preconnect pour performances -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Fonts Google -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;900&family=Montserrat:wght@900&display=swap" rel="stylesheet">
+    
+    <!-- CSS Modulaire - ORDRE CRITIQUE -->
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/splash-animations.css">
+    <link rel="stylesheet" href="css/registration-form.css">
+    <link rel="stylesheet" href="css/bank-card.css">
+    <link rel="stylesheet" href="css/game-interface.css">
+    <link rel="stylesheet" href="css/advanced-systems.css">
+</head>
+<body>
+    <!-- SPLASH SCREEN -->
+    <div id="splash" class="splash-wrapper">
+        <div id="particles" class="particles-container"></div>
+        <div id="eppon-sequence" class="logo-box">
+            <div class="tycoon-text">EPPON</div>
+        </div>
+        <div id="tycoon-sequence" class="logo-box">
+            <div class="tycoon-text">TYCOON</div>
+        </div>
+    </div>
+
+    <!-- FORMULAIRE D'INSCRIPTION -->
+    <div id="registration-screen">
+        <div class="form-card">
+            <h1 class="form-title">CREER VOTRE EMPIRE</h1>
+            
+            <div class="input-group">
+                <label for="in-name">Votre Nom</label>
+                <input type="text" id="in-name" placeholder="Ex: Jean Kouassi" maxlength="30" autocomplete="name">
+                <div id="err-name" class="error-msg">Veuillez entrer votre nom</div>
+            </div>
+
+            <div class="input-group">
+                <label for="in-comp">Nom de l'Entreprise</label>
+                <input type="text" id="in-comp" placeholder="Ex: Kouassi Ventures" maxlength="40" autocomplete="organization">
+                <div id="err-comp" class="error-msg">Veuillez entrer le nom de l'entreprise</div>
+            </div>
+
+            <div class="input-group">
+                <label for="in-bank">Banque Partenaire</label>
+                <select id="in-bank">
+                    <option value="uba">UBA Benin</option>
+                    <option value="ecobank">Ecobank</option>
+                    <option value="boa">BOA Benin</option>
+                    <option value="nsia">NSIA Banque</option>
+                    <option value="sgb">Societe Generale Benin</option>
+                    <option value="bgfibank">BGFI Bank Benin</option>
+                </select>
+            </div>
+
+            <button class="btn-start" id="btn-go" onclick="startGame()">Demarrer</button>
+        </div>
+    </div>
+
+    <!-- JEU PRINCIPAL -->
+    <div id="main-game">
+        <!-- Onglets de navigation -->
+        <div class="tabs-container">
+            <div class="tab active" data-tab="production">Production</div>
+            <div class="tab" data-tab="derivatives">Derives</div>
+            <div class="tab" data-tab="buildings">Batiments</div>
+            <div class="tab" data-tab="export">Export</div>
+            <div class="tab" data-tab="stats">Stats</div>
+        </div>
+
+        <div class="content">
+            <!-- PANEL PRODUCTION -->
+            <div id="panel-production" class="panel active">
+                <!-- Carte bancaire -->
+                <div id="card-element" class="card">
+                    <div class="card-top">
+                        <div class="bank-logo" id="out-bank-name">UBA</div>
+                        <div class="chip"></div>
+                    </div>
+
+                    <div>
+                        <div class="balance-label">SOLDE DISPONIBLE</div>
+                        <div class="balance-val" id="out-money">0 FCFA</div>
+                    </div>
+
+                    <div class="card-bottom">
+                        <div>
+                            <div style="font-size: 0.6rem; opacity: 0.5;">PROPRIETAIRE</div>
+                            <div style="font-size: 0.85rem; font-weight: 600; margin-top: 3px;" id="out-name">-</div>
+                        </div>
+                        <div class="card-num" id="out-comp">-</div>
+                    </div>
+                </div>
+
+                <!-- Statut -->
+                <div class="status-box">
+                    <div class="status-line">
+                        <span class="status-label">Niveau</span>
+                        <span class="status-value" id="out-lvl">NIVEAU 1</span>
+                    </div>
+                    <div class="status-line">
+                        <span class="status-label">Gain par clic</span>
+                        <span class="status-value" id="out-gain">+ 100 FCFA</span>
+                    </div>
+                    <div class="progress-container">
+                        <div id="out-bar" class="progress-bar"></div>
+                    </div>
+                    <button class="upgrade-btn" id="upgrade-btn" onclick="applyUpgrade()">
+                        Niveau Suivant - <span id="out-cost">0</span> FCFA
+                    </button>
+                </div>
+
+                <!-- Zone de clic -->
+                <div class="click-zone">
+                    <div class="tap-circle" id="tap-btn">$</div>
+                </div>
+            </div>
+
+            <!-- PANEL DERIVES -->
+            <div id="panel-derivatives" class="panel">
+                <div class="section-title">Stock de Derives</div>
+                <div id="derivatives-grid" class="derivatives-grid"></div>
+
+                <div class="section-title">Transformation Rapide</div>
+                <div id="transform-section"></div>
+            </div>
+
+            <!-- PANEL BATIMENTS -->
+            <div id="panel-buildings" class="panel">
+                <div class="section-title">Batiments Industriels</div>
+                <div id="buildings-list" class="buildings-list"></div>
+            </div>
+
+            <!-- PANEL EXPORT -->
+            <div id="panel-export" class="panel">
+                <div class="export-section">
+                    <div class="section-title">Destinations</div>
+                    <div id="destinations-grid" class="destinations-grid"></div>
+                </div>
+
+                <div class="export-section">
+                    <div class="section-title">Expeditions en cours</div>
+                    <div id="shipments-list" class="shipments-list"></div>
+                </div>
+
+                <div class="export-section">
+                    <div class="section-title">Historique</div>
+                    <div id="export-history"></div>
+                </div>
+            </div>
+
+            <!-- PANEL STATISTIQUES -->
+            <div id="panel-stats" class="panel">
+                <div class="section-title">Vue d'ensemble</div>
+                <div id="stats-overview" class="stats-grid"></div>
+
+                <div class="section-title">Production</div>
+                <div id="stats-production"></div>
+
+                <div class="section-title">Exportations</div>
+                <div id="stats-exports"></div>
+            </div>
+        </div>
+
+        <div class="bottom-nav">
+            <div class="nav-item active">Accueil</div>
+            <div class="nav-item" onclick="resetProgress()">Reinitialiser</div>
+        </div>
+    </div>
+
+    <!-- Toast de succes -->
+    <div id="success-toast" class="success-toast"></div>
+
+    <!-- JavaScript Modulaire - ORDRE D'IMPORTATION CRITIQUE -->
+    <script src="js/config.js"></script>
+    <script src="js/error-handler.js"></script>
+    <script src="js/validator.js"></script>
+    <script src="js/game-state.js"></script>
+    <script src="js/derivatives-manager.js"></script>
+    <script src="js/buildings-manager.js"></script>
+    <script src="js/export-manager.js"></script>
+    <script src="js/ui-manager.js"></script>
+    <script src="js/advanced-ui-manager.js"></script>
+    <script src="js/click-handler.js"></script>
+    <script src="js/level-manager.js"></script>
+    <script src="js/form-handler.js"></script>
+    <script src="js/splash.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
