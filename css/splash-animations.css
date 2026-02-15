@@ -1,0 +1,75 @@
+/* ========================================
+   ANIMATIONS SPLASH SCREEN
+   ======================================== */
+
+.splash-wrapper {
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%;
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+    z-index: 9999; 
+    background-color: #000;
+    perspective: 1000px;
+}
+
+.particles-container { 
+    position: absolute; 
+    width: 100%; 
+    height: 100%; 
+    overflow: hidden; 
+    pointer-events: none; 
+}
+
+.particle { 
+    position: absolute; 
+    background: white; 
+    border-radius: 50%; 
+    opacity: 0; 
+    animation: floatParticle 17s infinite linear; 
+}
+
+@keyframes floatParticle {
+    0% { transform: translateY(100vh) scale(0); opacity: 0; }
+    20% { opacity: 0.5; }
+    80% { opacity: 0.5; }
+    100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+}
+
+.logo-box { 
+    position: absolute; 
+    opacity: 0; 
+    text-align: center; 
+    width: 100%; 
+}
+
+#eppon-sequence { 
+    animation: eppon-cinematic 8.5s cubic-bezier(0.4, 0, 0.2, 1) forwards; 
+}
+
+#tycoon-sequence { 
+    animation: tycoon-cinematic 8.5s 8.5s cubic-bezier(0.4, 0, 0.2, 1) forwards; 
+}
+
+@keyframes eppon-cinematic {
+    0% { opacity: 0; transform: scale(0.5) translateZ(-200px); filter: blur(20px); letter-spacing: 40px; }
+    30% { opacity: 1; filter: blur(0px); }
+    100% { opacity: 0; transform: scale(1.5) translateZ(100px); filter: blur(30px); }
+}
+
+@keyframes tycoon-cinematic {
+    0% { opacity: 0; transform: scale(2); filter: blur(30px); }
+    20% { opacity: 1; transform: scale(1); filter: blur(0px); }
+    100% { opacity: 0; transform: translateY(-50px); filter: blur(20px); }
+}
+
+.tycoon-text { 
+    font-family: 'Montserrat'; 
+    font-size: clamp(50px, 15vw, 80px);
+    background: linear-gradient(180deg, #fff 0%, #666 100%); 
+    -webkit-background-clip: text; 
+    -webkit-text-fill-color: transparent;
+}
