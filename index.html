@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+﻿﻿<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
@@ -13,12 +13,13 @@
     
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;900&family=Montserrat:wght@900&display=swap" rel="stylesheet">
     
-    <link rel="stylesheet" href="css/global.css">
-    <link rel="stylesheet" href="css/splash-animations.css">
-    <link rel="stylesheet" href="css/registration-form.css">
-    <link rel="stylesheet" href="css/bank-card.css">
-    <link rel="stylesheet" href="css/game-interface.css">
-    <link rel="stylesheet" href="css/advanced-systems.css">
+    <!-- Styles CSS - Nouveaux chemins -->
+    <link rel="stylesheet" href="css/core/global.css">
+    <link rel="stylesheet" href="css/core/splash-animations.css">
+    <link rel="stylesheet" href="css/core/registration-form.css">
+    <link rel="stylesheet" href="css/core/bank-card.css">
+    <link rel="stylesheet" href="css/core/game-interface.css">
+    <link rel="stylesheet" href="css/core/advanced-systems.css">
 </head>
 <body>
     <div id="error-display" style="display:none; position:fixed; top:0; left:0; width:100%; background:rgba(220, 53, 69, 0.9); color:white; padding:10px; z-index:10000; text-align:center; font-family: 'Outfit', sans-serif;"></div>
@@ -161,23 +162,35 @@
 
     <div id="success-toast" class="success-toast"></div>
 
-    <script src="js/config.js"></script>
-    <script src="js/validator.js"></script>
-    <script src="js/game-state.js"></script>
+    <!-- Core Modules (fondamentaux) -->
+    <script src="js/core/config.js"></script>
+    <script src="js/core/validator.js"></script>
+    <script src="js/core/game-state.js"></script>
+    <script src="js/core/error-handler.js"></script>
     
-    <script src="js/derivatives-manager.js"></script>
-    <script src="js/buildings-manager.js"></script>
-    <script src="js/export-manager.js"></script>
-    <script src="js/level-manager.js"></script>
-    <script src="js/market-manager.js"></script> 
-
-    <script src="js/ui-manager.js"></script>
-    <script src="js/advanced-ui-manager.js"></script>
-    <script src="js/form-handler.js"></script>
-    <script src="js/click-handler.js"></script>
-    <script src="js/splash.js"></script>
+    <!-- Economy Modules (gestion économique) -->
+    <script src="js/economy/market-manager.js"></script>
+    <script src="js/economy/derivatives-manager.js"></script>
+    <script src="js/economy/buildings-manager.js"></script>
+    <script src="js/economy/export-manager.js"></script>
+    <script src="js/economy/level-manager.js"></script>
     
-    <script src="js/error-handler.js"></script>
-    <script src="js/main.js"></script>
+    <!-- Derivatives sub-modules (optionnels - conservés mais non utilisés actuellement) 
+    <script src="js/economy/derivatives/config.js"></script>
+    <script src="js/economy/derivatives/storage.js"></script>
+    <script src="js/economy/derivatives/transform.js"></script>
+    <script src="js/economy/derivatives/automation.js"></script>
+    <script src="js/economy/derivatives/api.js"></script>
+    -->
+    
+    <!-- UI Modules (interface utilisateur) -->
+    <script src="js/ui/ui-manager.js"></script>
+    <script src="js/ui/advanced-ui-manager.js"></script>
+    <script src="js/ui/form-handler.js"></script>
+    <script src="js/ui/click-handler.js"></script>
+    <script src="js/ui/splash.js"></script>
+    
+    <!-- Main (point d'entrée) -->
+    <script src="js/core/main.js"></script>
 </body>
 </html>
