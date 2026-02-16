@@ -1,4 +1,4 @@
-﻿/* ========================================
+﻿﻿/* ========================================
    MODULE: ERROR HANDLER (Le Bouclier)
    Version: 1.1 - Stable
    ======================================== */
@@ -20,10 +20,22 @@ const ErrorHandler = (() => {
             if (display) {
                 display.textContent = "Erreur: " + msg;
                 display.style.display = 'block';
+                setTimeout(() => {
+                    display.style.display = 'none';
+                }, 5000);
             }
         },
         handleWarning: (msg, error) => {
             console.warn("⚠️ ALERTE:", msg, error);
+        },
+        // FONCTION MANQUANTE AJOUTÉE - utilisée par export-manager.js et autres
+        safeSync: (fn, defaultValue = null) => {
+            try {
+                return fn();
+            } catch (e) {
+                ErrorHandler.handleError("Erreur d'exécution", e);
+                return defaultValue;
+            }
         }
     };
 })();
@@ -65,9 +77,9 @@ window.addEventListener('load', () => {
     if (typeof BuildingsManager !== 'undefined') BuildingsManager.init();
     if (typeof ExportManager !== 'undefined') ExportManager.init();
     
-    // Correction ici : On appelle la bonne fonction de l'AdvancedUIManager
-    if (typeof AdvancedUIManager !== 'undefined' && AdvancedUIManager.initTabs) {
-        AdvancedUIManager.initTabs();
+    // CORRECTION: On appelle init() au lieu de initTabs()
+    if (typeof AdvancedUIManager !== 'undefined' && AdvancedUIManager.init) {
+        AdvancedUIManager.init();
     }
 
     // Gestion du clic principal
