@@ -1,4 +1,4 @@
-﻿/* ========================================
+﻿﻿/* ========================================
    MAIN APPLICATION
    Coordonne tous les modules
    ======================================== */
@@ -55,10 +55,19 @@ window.addEventListener('load', () => {
     /* 2. Initialiser les modules moteurs */
     if (typeof BuildingsManager !== 'undefined') BuildingsManager.init();
     if (typeof ExportManager !== 'undefined') ExportManager.init();
-    if (typeof MarketManager !== 'undefined') MarketManager.init(); // Déplacé ici pour sécurité
     
-    /* 3. Initialiser l'interface avancée (CORRECTIF de la ligne brisée) */
-    if (typeof AdvancedUIManager !== 'undefined' && AdvancedUIManager.initTabs) {
+    // SÉCURISÉ: Vérification que MarketManager existe avant d'appeler init
+    if (typeof MarketManager !== 'undefined' && MarketManager.init) {
+        MarketManager.init();
+    } else {
+        console.warn('MarketManager non disponible - ignoré');
+    }
+    
+    /* 3. Initialiser l'interface avancée - CORRIGÉ: on utilise init() */
+    if (typeof AdvancedUIManager !== 'undefined' && AdvancedUIManager.init) {
+        AdvancedUIManager.init();
+    } else if (typeof AdvancedUIManager !== 'undefined' && AdvancedUIManager.initTabs) {
+        // Fallback pour compatibilité
         AdvancedUIManager.initTabs();
     }
     
