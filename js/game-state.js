@@ -15,6 +15,8 @@ const GameState = (() => {
         clicks: 0,
         target: 30,
         lastClickTime: 0,
+        // AJOUT: stock de coton brut pour les transformations
+        rawCotton: 0,
         levels: [
             { cost: 0, gain: 100 },
             { cost: 500, gain: 200 },
