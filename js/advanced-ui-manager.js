@@ -381,9 +381,10 @@ const AdvancedUIManager = (() => {
         ErrorHandler.handleInfo('AdvancedUIManager initialise');
     }
     
-    /* Interface publique */
+    /* Interface publique - initTabs ajouté pour compatibilité */
     return {
         init,
+        initTabs,        // Gardé pour compatibilité avec main.js
         switchTab,
         updateAll,
         updateDerivativesPanel,
